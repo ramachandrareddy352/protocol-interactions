@@ -2,8 +2,8 @@
 pragma solidity ^0.8.19;
 pragma abicoder v2;
 
-import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
+import "lib/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import "lib/v3-periphery/contracts/libraries/TransferHelper.sol";
 
 contract SwapTokens {
     // router contract to swap the tokens
@@ -19,6 +19,9 @@ contract SwapTokens {
         swapRouter = _swapRouter;
     }
 
+    /* ------------------------------------------------------------------------------------
+    ------------------------------- Single swap with exact input --------------------------
+    ------------------------------------------------------------------------------------ */
     // here we are swapping tokens from WETH(tokenIn) -> DAI(tokenOut) by entering exact `tokenIn` anount
     function swapExactInputSingle(uint256 amountIn) external returns (uint256 amountOut) {
         TransferHelper.safeTransferFrom(WETH9, msg.sender, address(this), amountIn);
@@ -38,6 +41,9 @@ contract SwapTokens {
         amountOut = swapRouter.exactInputSingle(params);
     }
 
+    /* ------------------------------------------------------------------------------------
+    ------------------------------- Single swap with exact output -------------------------
+    ------------------------------------------------------------------------------------ */
     // here we are swapping tokens from WETH(tokenIn) -> DAI(tokenOut) by entering exact `tokenOut` anount
     function swapExactOutputSingle(uint256 amountOut, uint256 amountInMaximum) external returns (uint256 amountIn) {
         TransferHelper.safeTransferFrom(WETH9, msg.sender, address(this), amountInMaximum);
@@ -64,6 +70,9 @@ contract SwapTokens {
         }
     }
 
+    /* ------------------------------------------------------------------------------------
+    ----------------------------- Multi hop swap with exact input -------------------------
+    ------------------------------------------------------------------------------------ */
     // here we swap multihop swap WETH --> USDC --> DAI
     function swapExactInputMultihop(uint256 amountIn) external returns (uint256 amountOut) {
         TransferHelper.safeTransferFrom(WETH9, msg.sender, address(this), amountIn);
@@ -79,6 +88,9 @@ contract SwapTokens {
         amountOut = swapRouter.exactInput(params);
     }
 
+    /* ------------------------------------------------------------------------------------
+    ----------------------------- Multi hop swap with exact output ------------------------
+    ------------------------------------------------------------------------------------ */
     /// swap WETH --> USDC --> DAI
     function swapExactOutputMultihop(uint256 amountOut, uint256 amountInMaximum) external returns (uint256 amountIn) {
         TransferHelper.safeTransferFrom(WETH9, msg.sender, address(this), amountInMaximum);
@@ -93,7 +105,7 @@ contract SwapTokens {
         });
 
         amountIn = swapRouter.exactOutput(params);
-        
+
         if (amountIn < amountInMaximum) {
             TransferHelper.safeApprove(WETH9, address(swapRouter), 0);
             TransferHelper.safeTransferFrom(WETH9, address(this), msg.sender, amountInMaximum - amountIn);

@@ -1,7 +1,13 @@
 {
   "name": "Protocol-interactions",
   "dependencies": {
+    "@uniswap/sdk-core": "^5.3.1",
     "@uniswap/v3-core": "^1.0.1",
-    "@uniswap/v3-periphery": "^1.4.1"
+    "@uniswap/v3-periphery": "^1.4.1",
+    "@uniswap/v3-sdk": "^3.13.1",
+    "ethers": "^6.13.2"
   }
 }
+// anvil --fork-url https://mainnet.chainnodes.org/cb57fe1a-74ff-4adc-ab46-b3cbb96ce0ce --fork-block-number 17480237 --fork-chain-id 1 --chain-id 1   => run the loacl node with mainnet setup
+
+// https://docs.uniswap.org/sdk/v3/guides/web3-development-basics => for local development(client side)
